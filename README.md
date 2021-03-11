@@ -60,14 +60,14 @@ h2o.init(nthreads = -1)
     ##  Connection successful!
     ## 
     ## R is connected to the H2O cluster: 
-    ##     H2O cluster uptime:         1 hours 22 minutes 
+    ##     H2O cluster uptime:         2 hours 8 minutes 
     ##     H2O cluster timezone:       America/Toronto 
     ##     H2O data parsing timezone:  UTC 
     ##     H2O cluster version:        3.32.0.3 
     ##     H2O cluster version age:    2 months and 14 days  
     ##     H2O cluster name:           H2O_started_from_R_acharpen_xtn957 
     ##     H2O cluster total nodes:    1 
-    ##     H2O cluster total memory:   3.44 GB 
+    ##     H2O cluster total memory:   2.85 GB 
     ##     H2O cluster total cores:    4 
     ##     H2O cluster allowed cores:  4 
     ##     H2O cluster healthy:        TRUE 
@@ -186,8 +186,10 @@ plot(reg_bst_1000)
 
 # Construction of the models
 
-Let \(\mu\) denote the true mean,
-\(\mu(\boldsymbol{x})=\mathbb{E}[Y|\boldsymbol{X}=\boldsymbol{x}]\).
+Let ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\\mu") denote
+the true mean,
+![\\mu(\\boldsymbol{x})=\\mathbb{E}\[Y|\\boldsymbol{X}=\\boldsymbol{x}\]](https://latex.codecogs.com/png.latex?%5Cmu%28%5Cboldsymbol%7Bx%7D%29%3D%5Cmathbb%7BE%7D%5BY%7C%5Cboldsymbol%7BX%7D%3D%5Cboldsymbol%7Bx%7D%5D
+"\\mu(\\boldsymbol{x})=\\mathbb{E}[Y|\\boldsymbol{X}=\\boldsymbol{x}]").
 
 ``` r
 vx = seq(0,.2,length=251)
@@ -267,9 +269,13 @@ hist(valid_prime_bst, breaks = (0:(201*max(valid_prime_bst)))/200,xlim=c(0,.2),c
 ![](files/unnamed-chunk-11-1.png)<!-- -->
 
 The following graph is a visulisation of
-\(s\mapsto\mathbb{E}[Y|\pi(\boldsymbol{X})=s]\) where \(s\) is some
-premium level, for the three models \(\pi\). If \(\pi\) is close to
-\(\mu\) the curve should be close to the first diagonal.
+![s\\mapsto\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=s\]](https://latex.codecogs.com/png.latex?s%5Cmapsto%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3Ds%5D
+"s\\mapsto\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=s]") where
+![s](https://latex.codecogs.com/png.latex?s "s") is some premium level,
+for the three models ![\\pi](https://latex.codecogs.com/png.latex?%5Cpi
+"\\pi"). If ![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi")
+is close to ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\\mu")
+the curve should be close to the first diagonal.
 
 ``` r
 par(mfrow=c(1,3))
@@ -283,11 +289,17 @@ abline(a=0,b=1,lwd=.4)
 
 ![](files/unnamed-chunk-12-1.png)<!-- -->
 
-Since
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
-\(\pi\sim\mu\), we can plot
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]- F_\pi^{-1}(u)\) which
-should be close to \(0\)
+Since ![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]\\sim
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%5Csim%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]\\sim F_\\pi^{-1}(u)")
+if
+![\\pi\\sim\\mu](https://latex.codecogs.com/png.latex?%5Cpi%5Csim%5Cmu
+"\\pi\\sim\\mu"), we can plot
+![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]-
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D-%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]- F_\\pi^{-1}(u)")
+which should be close to ![0](https://latex.codecogs.com/png.latex?0
+"0")
 
 ``` r
 par(mfrow=c(1,3))
@@ -305,16 +317,24 @@ abline(h=0,lwd=.4)
 ![](files/unnamed-chunk-13-1.png)<!-- -->
 
 Observe that
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\geq F_\pi^{-1}(u)\)
-which reflects the local bias of the estimator \(\pi\) (except perhaps
-for very low risks). Other plots can be used to visualised using the
-following plots.
+![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]\\geq
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%5Cgeq%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]\\geq F_\\pi^{-1}(u)")
+which reflects the local bias of the estimator
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi") (except
+perhaps for very low risks). Other plots can be used to visualised using
+the following plots.
 
-Since
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
-\(\pi\sim\mu\), we can plot
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]/F_\pi^{-1}(u)\) which
-should be close to \(1\),
+Since ![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]\\sim
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%5Csim%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]\\sim F_\\pi^{-1}(u)")
+if
+![\\pi\\sim\\mu](https://latex.codecogs.com/png.latex?%5Cpi%5Csim%5Cmu
+"\\pi\\sim\\mu"), we can plot
+![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]/F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%2FF_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]/F_\\pi^{-1}(u)")
+which should be close to ![1](https://latex.codecogs.com/png.latex?1
+"1"),
 
 ``` r
 par(mfrow=c(1,3))
@@ -333,8 +353,10 @@ This function can be used for a correction.
 # Correction
 
 We will use
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]/F_\pi^{-1}(u)\) as a
-multiplier to correct \(\pi\).
+![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]/F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%2FF_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]/F_\\pi^{-1}(u)") as
+a multiplier to correct
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi").
 
 ``` r
 p_glm = predict(fit_loc_glm,newdata = valid_prime_glm)
@@ -391,7 +413,10 @@ fit_loc_bst_bc = locfit.raw(x=valid_prime_bst_bc,
                  kern="rect",deg=0,alpha=.05)
 ```
 
-We can compare the two models, \(\pi\) and \(\pi_{BC}\)
+We can compare the two models,
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi") and
+![\\pi\_{BC}](https://latex.codecogs.com/png.latex?%5Cpi_%7BBC%7D
+"\\pi_{BC}")
 
 ``` r
 vu=(0:200)/200
@@ -441,7 +466,8 @@ abline(a=0,b=1,lwd=.4)
 ![](files/unnamed-chunk-19-1.png)<!-- -->
 
 The histograms are below are the distributions of the premiums using
-\(\pi_{BC}\)
+![\\pi\_{BC}](https://latex.codecogs.com/png.latex?%5Cpi_%7BBC%7D
+"\\pi_{BC}")
 
 ``` r
 par(mfrow=c(1,3))
@@ -456,9 +482,16 @@ hist(valid_prime_bst_bc, breaks = (0:(207*max(valid_prime_bst_bc)))/200,xlim=c(0
 ![](files/unnamed-chunk-20-1.png)<!-- -->
 
 The following graph is a visulisation of
-\(s\mapsto\mathbb{E}[Y|\pi_{BC}(\boldsymbol{X})=s]\) where \(s\) is some
-premium level, for the three models \(\pi_{BC}\). Observe that
-\(\pi_{BC}\) is closer to \(\mu\) than \(\pi\).
+![s\\mapsto\\mathbb{E}\[Y|\\pi\_{BC}(\\boldsymbol{X})=s\]](https://latex.codecogs.com/png.latex?s%5Cmapsto%5Cmathbb%7BE%7D%5BY%7C%5Cpi_%7BBC%7D%28%5Cboldsymbol%7BX%7D%29%3Ds%5D
+"s\\mapsto\\mathbb{E}[Y|\\pi_{BC}(\\boldsymbol{X})=s]") where
+![s](https://latex.codecogs.com/png.latex?s "s") is some premium level,
+for the three models
+![\\pi\_{BC}](https://latex.codecogs.com/png.latex?%5Cpi_%7BBC%7D
+"\\pi_{BC}"). Observe that
+![\\pi\_{BC}](https://latex.codecogs.com/png.latex?%5Cpi_%7BBC%7D
+"\\pi_{BC}") is closer to
+![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\\mu") than
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi").
 
 ``` r
 par(mfrow=c(1,3))
@@ -476,8 +509,10 @@ abline(a=0,b=1,lwd=.4)
 ![](files/unnamed-chunk-21-1.png)<!-- -->
 
 The following graph is a visulisation of
-\(u\mapsto\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\) where \(u\)
-is some probability level
+![u\\mapsto\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]](https://latex.codecogs.com/png.latex?u%5Cmapsto%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D
+"u\\mapsto\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]") where
+![u](https://latex.codecogs.com/png.latex?u "u") is some probability
+level
 
 ``` r
 par(mfrow=c(1,3))
@@ -497,11 +532,17 @@ lines(q_bst,vy_bst,col=scales::alpha(clrpal4[3],.4))
 
 ![](files/unnamed-chunk-22-1.png)<!-- -->
 
-since
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
-\(\pi\sim\mu\), we can plot
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]- F_\pi^{-1}(u)\) which
-should be close to \(0\)
+since ![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]\\sim
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%5Csim%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]\\sim F_\\pi^{-1}(u)")
+if
+![\\pi\\sim\\mu](https://latex.codecogs.com/png.latex?%5Cpi%5Csim%5Cmu
+"\\pi\\sim\\mu"), we can plot
+![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]-
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D-%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]- F_\\pi^{-1}(u)")
+which should be close to ![0](https://latex.codecogs.com/png.latex?0
+"0")
 
 ``` r
 par(mfrow=c(1,3))
@@ -518,11 +559,16 @@ lines(q_bst,vy_bst-vx,col=scales::alpha(clrpal4[3],.4))
 
 ![](files/unnamed-chunk-23-1.png)<!-- -->
 
-since
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
-\(\pi\sim\mu\), we can plot
-\(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]/F_\pi^{-1}(u)\) which
-should be close to \(1\),
+since ![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]\\sim
+F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%5Csim%20F_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]\\sim F_\\pi^{-1}(u)")
+if
+![\\pi\\sim\\mu](https://latex.codecogs.com/png.latex?%5Cpi%5Csim%5Cmu
+"\\pi\\sim\\mu"), we can plot
+![\\mathbb{E}\[Y|\\pi(\\boldsymbol{X})=F\_\\pi^{-1}(u)\]/F\_\\pi^{-1}(u)](https://latex.codecogs.com/png.latex?%5Cmathbb%7BE%7D%5BY%7C%5Cpi%28%5Cboldsymbol%7BX%7D%29%3DF_%5Cpi%5E%7B-1%7D%28u%29%5D%2FF_%5Cpi%5E%7B-1%7D%28u%29
+"\\mathbb{E}[Y|\\pi(\\boldsymbol{X})=F_\\pi^{-1}(u)]/F_\\pi^{-1}(u)")
+which should be close to ![1](https://latex.codecogs.com/png.latex?1
+"1"),
 
 ``` r
 par(mfrow=c(1,3))
@@ -541,14 +587,29 @@ lines(q_bst,vy_bst/vx,col=scales::alpha(clrpal4[3],.4))
 
 # Partial Dependence Plots
 
-In order to understand the changes of the model, from \(\pi\) to
-\(\pi_{BC}\) it is possible to look at partial dependence plots. Given a
-variable of interest \(x_k\) out of \(\boldsymbol{x}\), consider
-\(x\mapsto E[\pi(x,\boldsymbol{X}_{-k})]\) where
-\(\pi(x,\boldsymbol{x}_{-k})\) corresponds to vector \(\boldsymbol{x}\)
-where \(x\) is substituted to \(x_k\). The empirical version is \[
-\text{pdp}_k(x) = \frac{1}{n}\sum_{i=1}^n \pi(x_{1,i},\cdots,x_{k-1,i},x,x_{k+1,i},\cdots,x_{p,i}).
-\]
+In order to understand the changes of the model, from
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi") to
+![\\pi\_{BC}](https://latex.codecogs.com/png.latex?%5Cpi_%7BBC%7D
+"\\pi_{BC}") it is possible to look at partial dependence plots. Given a
+variable of interest ![x\_k](https://latex.codecogs.com/png.latex?x_k
+"x_k") out of
+![\\boldsymbol{x}](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7Bx%7D
+"\\boldsymbol{x}"), consider ![x\\mapsto
+E\[\\pi(x,\\boldsymbol{X}\_{-k})\]](https://latex.codecogs.com/png.latex?x%5Cmapsto%20E%5B%5Cpi%28x%2C%5Cboldsymbol%7BX%7D_%7B-k%7D%29%5D
+"x\\mapsto E[\\pi(x,\\boldsymbol{X}_{-k})]") where
+![\\pi(x,\\boldsymbol{x}\_{-k})](https://latex.codecogs.com/png.latex?%5Cpi%28x%2C%5Cboldsymbol%7Bx%7D_%7B-k%7D%29
+"\\pi(x,\\boldsymbol{x}_{-k})") corresponds to vector
+![\\boldsymbol{x}](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7Bx%7D
+"\\boldsymbol{x}") where ![x](https://latex.codecogs.com/png.latex?x
+"x") is substituted to ![x\_k](https://latex.codecogs.com/png.latex?x_k
+"x_k"). The empirical version is   
+![
+\\text{pdp}\_k(x) = \\frac{1}{n}\\sum\_{i=1}^n
+\\pi(x\_{1,i},\\cdots,x\_{k-1,i},x,x\_{k+1,i},\\cdots,x\_{p,i}).
+](https://latex.codecogs.com/png.latex?%0A%5Ctext%7Bpdp%7D_k%28x%29%20%3D%20%5Cfrac%7B1%7D%7Bn%7D%5Csum_%7Bi%3D1%7D%5En%20%5Cpi%28x_%7B1%2Ci%7D%2C%5Ccdots%2Cx_%7Bk-1%2Ci%7D%2Cx%2Cx_%7Bk%2B1%2Ci%7D%2C%5Ccdots%2Cx_%7Bp%2Ci%7D%29.%0A
+"
+\\text{pdp}_k(x) = \\frac{1}{n}\\sum_{i=1}^n \\pi(x_{1,i},\\cdots,x_{k-1,i},x,x_{k+1,i},\\cdots,x_{p,i}).
+")  
 
 ``` r
 pdp_glm = function(x ){
@@ -661,8 +722,11 @@ lines(VD,V_pdp_bst[2,],col=scales::alpha(clrpal4[3],1),lwd=3)
 
 # Correlation
 
-We can also consider the correlation between models \(\pi\) and the
-associated corrected versions \(\pi_{BC}\)
+We can also consider the correlation between models
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi") and the
+associated corrected versions
+![\\pi\_{BC}](https://latex.codecogs.com/png.latex?%5Cpi_%7BBC%7D
+"\\pi_{BC}")
 
 ``` r
 X = cbind(valid_prime_glm,valid_prime_gam,valid_prime_bst,
@@ -684,13 +748,23 @@ corrplot(M2, method="number")
 # Concentration Curves
 
 Finally, we can plot concentration curves. The concentration curve of
-the true premium \(\mu\) with respect to the model \(\pi\) based on the
-information contained in the vector \(\boldsymbol{X}\) is defined there
-as \[
-\alpha\mapsto C[\mu,\pi;\alpha]
-=\frac{\mathbb{E}\big[\mu(\boldsymbol{X})\boldsymbol{1}[\pi\boldsymbol{X})\leq F_{\pi}^{-1}(\alpha)]\big]}
-{\mathbb{E}[\mu(\boldsymbol{X})]}
-\]
+the true premium ![\\mu](https://latex.codecogs.com/png.latex?%5Cmu
+"\\mu") with respect to the model
+![\\pi](https://latex.codecogs.com/png.latex?%5Cpi "\\pi") based on the
+information contained in the vector
+![\\boldsymbol{X}](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7BX%7D
+"\\boldsymbol{X}") is defined there as   
+![
+\\alpha\\mapsto C\[\\mu,\\pi;\\alpha\]
+\=\\frac{\\mathbb{E}\\big\[\\mu(\\boldsymbol{X})\\boldsymbol{1}\[\\pi\\boldsymbol{X})\\leq
+F\_{\\pi}^{-1}(\\alpha)\]\\big\]}
+{\\mathbb{E}\[\\mu(\\boldsymbol{X})\]}
+](https://latex.codecogs.com/png.latex?%0A%5Calpha%5Cmapsto%20C%5B%5Cmu%2C%5Cpi%3B%5Calpha%5D%0A%3D%5Cfrac%7B%5Cmathbb%7BE%7D%5Cbig%5B%5Cmu%28%5Cboldsymbol%7BX%7D%29%5Cboldsymbol%7B1%7D%5B%5Cpi%5Cboldsymbol%7BX%7D%29%5Cleq%20F_%7B%5Cpi%7D%5E%7B-1%7D%28%5Calpha%29%5D%5Cbig%5D%7D%0A%7B%5Cmathbb%7BE%7D%5B%5Cmu%28%5Cboldsymbol%7BX%7D%29%5D%7D%0A
+"
+\\alpha\\mapsto C[\\mu,\\pi;\\alpha]
+=\\frac{\\mathbb{E}\\big[\\mu(\\boldsymbol{X})\\boldsymbol{1}[\\pi\\boldsymbol{X})\\leq F_{\\pi}^{-1}(\\alpha)]\\big]}
+{\\mathbb{E}[\\mu(\\boldsymbol{X})]}
+")  
 
 ``` r
 CC = function(alpha, pi, y){
@@ -776,13 +850,23 @@ plot(valpha,v_prime_bst-v_prime_bst_bc,type="h",lwd=3,col=clrpal4[4],xlim=c(0,1)
 Smoothing is performed using the `locfit` package. In the R function
 `locfit`, when `alpha` is given as a single number, it represents a
 nearest neighbor fraction (the default smoothing parameter is
-\(\alpha=70\%\). But a second component can be added,
-\(\alpha=(\alpha_0,\alpha_1)\). That second component represents a
-constant bandwidth, and \(h(s)\) will be computed as follows: as
-previously, \(k=[n\alpha_0]\), and if \(d_{(i)}\) represents the ordered
-statistics of \(d_i=|s-s_i|\), \(h(s)=\max\{d_{(k)},\alpha_1\}\). The
-default value in R is `alpha=c(0.7,0)`. As we will see, it might be
-interesting to consider a much smaller value.
+![\\alpha=70\\%](https://latex.codecogs.com/png.latex?%5Calpha%3D70%5C%25
+"\\alpha=70\\%"). But a second component can be added,
+![\\alpha=(\\alpha\_0,\\alpha\_1)](https://latex.codecogs.com/png.latex?%5Calpha%3D%28%5Calpha_0%2C%5Calpha_1%29
+"\\alpha=(\\alpha_0,\\alpha_1)"). That second component represents a
+constant bandwidth, and
+![h(s)](https://latex.codecogs.com/png.latex?h%28s%29 "h(s)") will be
+computed as follows: as previously,
+![k=\[n\\alpha\_0\]](https://latex.codecogs.com/png.latex?k%3D%5Bn%5Calpha_0%5D
+"k=[n\\alpha_0]"), and if
+![d\_{(i)}](https://latex.codecogs.com/png.latex?d_%7B%28i%29%7D
+"d_{(i)}") represents the ordered statistics of
+![d\_i=|s-s\_i|](https://latex.codecogs.com/png.latex?d_i%3D%7Cs-s_i%7C
+"d_i=|s-s_i|"),
+![h(s)=\\max\\{d\_{(k)},\\alpha\_1\\}](https://latex.codecogs.com/png.latex?h%28s%29%3D%5Cmax%5C%7Bd_%7B%28k%29%7D%2C%5Calpha_1%5C%7D
+"h(s)=\\max\\{d_{(k)},\\alpha_1\\}"). The default value in R is
+`alpha=c(0.7,0)`. As we will see, it might be interesting to consider a
+much smaller value.
 
 ``` r
 vx = seq(0,.2,length=251)
@@ -840,7 +924,7 @@ i_valid_prime_bst_30 = valid_prime_bst_30
 i_valid_prime_bst_1000 = valid_prime_bst_1000
 ```
 
-# Impact of the smoothing parameter \(\alpha\)
+# Impact of the smoothing parameter ![\\alpha](https://latex.codecogs.com/png.latex?%5Calpha "\\alpha")
 
 ``` r
 VA = seq(.05,.975,by=.025)
@@ -918,8 +1002,9 @@ return(list(alpha = a,
 }
 ```
 
-In order to visualize the impact of \(\alpha\), let us try several
-values
+In order to visualize the impact of
+![\\alpha](https://latex.codecogs.com/png.latex?%5Calpha "\\alpha"), let
+us try several values
 
 ``` r
 B=P=M =matrix(NA,length(VA),(2+2)*2+1)
