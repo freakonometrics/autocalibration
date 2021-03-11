@@ -182,7 +182,7 @@ Here is the cross-validation loss
 plot(reg_bst_1000)
 ```
 
-![](unnamed-chunk-8-1.png)<!-- -->
+![](files/unnamed-chunk-8-1.png)<!-- -->
 
 # Construction of the models
 
@@ -264,7 +264,7 @@ hist(valid_prime_bst, breaks = (0:(201*max(valid_prime_bst)))/200,xlim=c(0,.2),c
      main="",xlab="Premium (boosting)",ylab="",ylim=c(0,37000))
 ```
 
-![](unnamed-chunk-11-1.png)<!-- -->
+![](files/unnamed-chunk-11-1.png)<!-- -->
 
 The following graph is a visulisation of
 \(s\mapsto\mathbb{E}[Y|\pi(\boldsymbol{X})=s]\) where \(s\) is some
@@ -281,7 +281,7 @@ plot(fit_loc_bst,lwd=3,col=clrpal4[3],xlim=c(0,.2),xlab="Premium (boosting)",yla
 abline(a=0,b=1,lwd=.4)
 ```
 
-![](unnamed-chunk-12-1.png)<!-- -->
+![](files/unnamed-chunk-12-1.png)<!-- -->
 
 Since
 \(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
@@ -302,7 +302,7 @@ plot(q_bst,vy_bst-vx,lwd=3,col=clrpal4[3],xlim=c(0,1),xlab="Premium quantile (bo
 abline(h=0,lwd=.4)
 ```
 
-![](unnamed-chunk-13-1.png)<!-- -->
+![](files/unnamed-chunk-13-1.png)<!-- -->
 
 Observe that
 \(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\geq F_\pi^{-1}(u)\)
@@ -326,7 +326,7 @@ plot(q_bst,vy_bst/vx,lwd=3,col=clrpal4[3],xlim=c(0,1),xlab="Premium quantile (bo
 abline(h=1,lwd=.4)
 ```
 
-![](unnamed-chunk-14-1.png)<!-- -->
+![](files/unnamed-chunk-14-1.png)<!-- -->
 
 This function can be used for a correction.
 
@@ -417,7 +417,7 @@ plot(Q_bst, Q_bst_bc, lwd=3, col=clrpal4[3], type="l",
 abline(a=0,b=1,lwd=.4)
 ```
 
-![](unnamed-chunk-18-1.png)<!-- -->
+![](files/unnamed-chunk-18-1.png)<!-- -->
 
 ``` r
 par(mfrow=c(1,3))
@@ -438,7 +438,7 @@ points(valid_prime_bst[idxs],valid_prime_bst_bc[idxs],pch=1,cex=.4,col=scales::a
 abline(a=0,b=1,lwd=.4)
 ```
 
-![](unnamed-chunk-19-1.png)<!-- -->
+![](files/unnamed-chunk-19-1.png)<!-- -->
 
 The histograms are below are the distributions of the premiums using
 \(\pi_{BC}\)
@@ -453,7 +453,7 @@ hist(valid_prime_bst_bc, breaks = (0:(207*max(valid_prime_bst_bc)))/200,xlim=c(0
      main="",xlab="Premium BC (boosting)",ylab="",ylim=c(0,37000))
 ```
 
-![](unnamed-chunk-20-1.png)<!-- -->
+![](files/unnamed-chunk-20-1.png)<!-- -->
 
 The following graph is a visulisation of
 \(s\mapsto\mathbb{E}[Y|\pi_{BC}(\boldsymbol{X})=s]\) where \(s\) is some
@@ -473,7 +473,7 @@ lines(fit_loc_bst,col=scales::alpha(clrpal4[3],.4))
 abline(a=0,b=1,lwd=.4)
 ```
 
-![](unnamed-chunk-21-1.png)<!-- -->
+![](files/unnamed-chunk-21-1.png)<!-- -->
 
 The following graph is a visulisation of
 \(u\mapsto\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\) where \(u\)
@@ -495,7 +495,7 @@ lines(q_bst,vx,lwd=.4)
 lines(q_bst,vy_bst,col=scales::alpha(clrpal4[3],.4))
 ```
 
-![](unnamed-chunk-22-1.png)<!-- -->
+![](files/unnamed-chunk-22-1.png)<!-- -->
 
 since
 \(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
@@ -516,7 +516,7 @@ abline(h=0,lwd=.4)
 lines(q_bst,vy_bst-vx,col=scales::alpha(clrpal4[3],.4))
 ```
 
-![](unnamed-chunk-23-1.png)<!-- -->
+![](files/unnamed-chunk-23-1.png)<!-- -->
 
 since
 \(\mathbb{E}[Y|\pi(\boldsymbol{X})=F_\pi^{-1}(u)]\sim F_\pi^{-1}(u)\) if
@@ -537,7 +537,7 @@ abline(h=1,lwd=.4)
 lines(q_bst,vy_bst/vx,col=scales::alpha(clrpal4[3],.4))
 ```
 
-![](unnamed-chunk-24-1.png)<!-- -->
+![](files/unnamed-chunk-24-1.png)<!-- -->
 
 # Partial Dependence Plots
 
@@ -594,7 +594,7 @@ plot(18:80,V_pdp_bst[2,],type="l",col=clrpal4[3],xlab="Age (boosting)",ylab="",l
 lines(18:80,V_pdp_bst[1,],col=scales::alpha(clrpal4[3],.4),lwd=3)
 ```
 
-![](unnamed-chunk-26-1.png)<!-- -->
+![](files/unnamed-chunk-26-1.png)<!-- -->
 
 ``` r
 pdp_glm = function(x ){
@@ -643,7 +643,7 @@ plot(VD,V_pdp_bst[2,],type="l",col=clrpal4[3],xlab="Population Density (boosting
 lines(VD,V_pdp_bst[1,],col=scales::alpha(clrpal4[3],.4),lwd=3)
 ```
 
-![](unnamed-chunk-28-1.png)<!-- -->
+![](files/unnamed-chunk-28-1.png)<!-- -->
 
 ``` r
 par(mfrow=c(1,3))
@@ -657,7 +657,7 @@ plot(VD,V_pdp_bst[1,],type="l",col=scales::alpha(clrpal4[3],.4),xlab="Population
 lines(VD,V_pdp_bst[2,],col=scales::alpha(clrpal4[3],1),lwd=3)
 ```
 
-![](unnamed-chunk-29-1.png)<!-- -->
+![](files/unnamed-chunk-29-1.png)<!-- -->
 
 # Correlation
 
@@ -679,7 +679,7 @@ colnames(M2)[6]=rownames(M2)[6]="bst BC"
 corrplot(M2, method="number")
 ```
 
-![](unnamed-chunk-30-1.png)<!-- -->
+![](files/unnamed-chunk-30-1.png)<!-- -->
 
 # Concentration Curves
 
@@ -753,7 +753,7 @@ plot(valpha,v_prime_bst,type="l",lwd=3,col=clrpal4[3],xlim=c(0,1),
 lines(valpha,v_prime_bst,type="l",lwd=3,col=clrpal4[4])
 ```
 
-![](unnamed-chunk-35-1.png)<!-- -->
+![](files/unnamed-chunk-35-1.png)<!-- -->
 
 ``` r
 par(mfrow=c(1,3))
@@ -767,7 +767,7 @@ plot(valpha,v_prime_bst-v_prime_bst_bc,type="h",lwd=3,col=clrpal4[4],xlim=c(0,1)
      xlab=expression(alpha),ylab=expression(pi^bst - pi[bc]^bst))
 ```
 
-![](unnamed-chunk-36-1.png)<!-- -->
+![](files/unnamed-chunk-36-1.png)<!-- -->
 
 # The models
 
@@ -997,7 +997,7 @@ text(.05,M[1,"bst30bc"],expression(BST[BC]-30),col=clrpal6[3],pos=2,cex=.7)
 text(.05,M[1,"bst1000bc"]-.0005,expression(BST[BC]-1000),col=clrpal6[6],pos=2,cex=.7)
 ```
 
-![](unnamed-chunk-42-1.png)<!-- -->
+![](files/unnamed-chunk-42-1.png)<!-- -->
 
 ``` r
 par(mfrow=c(1,3))
@@ -1031,4 +1031,4 @@ idx=which((B[,1]*100)%%10<.01)
 text(B[idx,"bst30bc"],P[idx,"bst1000bc"],paste(B[idx,1]*100,"%"),col=clrpal6[6],cex=.7,pos=2)
 ```
 
-![](unnamed-chunk-43-1.png)<!-- -->
+![](files/unnamed-chunk-43-1.png)<!-- -->
