@@ -1682,3 +1682,334 @@ text(B[idx,"bst30bc"],P[idx,"bst1000bc"],paste(B[idx,1]*100,"%"),col=clrpal6[6],
 ```
 
 ![](files/unnamed-chunk-58-1.png)<!-- -->
+
+Autocalibration, application on real data (Tweedie)
+================
+
+# Dataset and other parameters
+
+First, let us define a color palette for graphs
+
+``` r
+library("wesanderson")
+library(scales)
+clrpal = wes_palette("Zissou1", 22, type = "continuous")
+clrpallow = scales::alpha(clrpal,.4)
+bleurouge = clrpal[c(1,22)]
+bleurougepal = clrpallow[c(1,22)]
+colr= clrpal4 = wes_palette("Darjeeling1")[c(1,2,3,5)]
+clrpal6 = wes_palette("Zissou1", 6, type = "continuous")
+```
+
+The dataset we will use is `freMTPL2freq` from the `CASdatasets` package
+(see <http://cas.uqam.ca>),
+
+``` r
+library(CASdatasets)
+data("freMTPL2freq")
+data("freMTPL2sev")
+str(freMTPL2sev)
+```
+
+    ## 'data.frame':    26639 obs. of  2 variables:
+    ##  $ IDpol      : int  1552 1010996 4024277 4007252 4046424 4073956 4012173 4020812 4020812 4074074 ...
+    ##  $ ClaimAmount: num  995 1128 1851 1204 1204 ...
+
+``` r
+freMTPL2sev_tot = aggregate(freMTPL2sev$ClaimAmount,
+                            by=list(freMTPL2sev$IDpol),
+                            FUN = sum)
+names(freMTPL2sev_tot)=names(freMTPL2sev)
+freMTPL2 = merge(freMTPL2freq,freMTPL2sev_tot,all.x=TRUE)
+freMTPL2$ClaimAmount[is.na(freMTPL2$ClaimAmount)]=0
+
+freMTPL2 = freMTPL2[(freMTPL2$Exposure>.95)&(freMTPL2$Exposure<1.05),]
+
+freMTPL2_backup = freMTPL2
+
+set.seed(123)
+TAUX = c(.6,.2)
+idx_train = sample(1:nrow(freMTPL2),size = round(nrow(freMTPL2)*TAUX[1]))
+idx_reste = (1:nrow(freMTPL2))[-idx_train]
+idx_correct = sample(idx_reste,size = round(nrow(freMTPL2)*TAUX[2]))
+idx_final = (1:nrow(freMTPL2))[-c(idx_train,idx_correct)]
+```
+
+``` r
+dev = function(p){
+reg = glm(ClaimAmount ~ VehAge+VehPower+VehBrand+as.factor(VehGas)+
+                 Area+Density+Region+DrivAge+BonusMalus+
+                 offset(log(Exposure)), data=freMTPL2[idx_train,],
+          family=tweedie(var.power = p, link.power = 0))
+reg$deviance
+}
+```
+
+``` r
+vect_p = vect_dev = seq(1.15,1.66,by=.005)
+for(i in 1:length(vect_p)){vect_dev[i]=dev(vect_p[i])}
+```
+
+``` r
+pw = 1.6
+par(mfrow=c(1,3))
+plot(vect_p,vect_dev,type="l",xlab="Power",ylab="Deviance (GLM)" )
+abline(v=pw,col=colr[2])
+```
+
+![](files/unnamed-chunk-5-1-a.png)<!-- -->
+
+# GLM and GAM with Tweedie Loss
+
+``` r
+reg_glm = glm(ClaimAmount ~ VehAge+VehPower+VehBrand+as.factor(VehGas)+
+                 Area+Density+Region+DrivAge+BonusMalus+
+                 offset(log(Exposure)),
+          data=freMTPL2[idx_train,],
+          family=tweedie(var.power = pw, link.power = 0))
+library(splines)
+reg_gam = glm(ClaimAmount ~ bs(VehAge)+bs(VehPower)+VehBrand+as.factor(VehGas)+
+                 Area+bs(Density)+Region+bs(DrivAge)+bs(BonusMalus)+
+                 offset(log(Exposure)),
+          data=freMTPL2[idx_train,],
+          family=tweedie(var.power = pw, link.power = 0))
+
+
+predict_glm=predict(reg_glm,type="response",newdata=freMTPL2[idx_correct,])
+predict_gam=predict(reg_gam,type="response",newdata=freMTPL2[idx_correct,])
+```
+
+    ## Warning in bs(BonusMalus, degree = 3L, knots = numeric(0), Boundary.knots =
+    ## c(50L, : some 'x' values beyond boundary knots may cause ill-conditioned bases
+
+``` r
+library(locfit)
+fit_loc_1 = locfit.raw(x=predict_glm, 
+                         y=freMTPL2[idx_correct,"ClaimAmount"], 
+                         kern="rect",deg=0,alpha=.05)
+fit_loc_2 = locfit.raw(x=predict_gam, 
+                         y=freMTPL2[idx_correct,"ClaimAmount"], 
+                         kern="rect",deg=0,alpha=.05)
+```
+
+# Boosting with Tweedie Loss
+
+``` r
+library(TDboost)
+library(HDtweedie) # has example dataset
+library(dplyr)
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:xts':
+    ## 
+    ##     first, last
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+fit = TDboost(ClaimAmount ~ VehAge+VehPower+VehBrand+as.factor(VehGas)+
+                 Area+Density+Region+DrivAge+BonusMalus+
+                 offset(log(Exposure)),
+              data=freMTPL2[idx_train,],
+              cv.folds=5, n.trees=3000, interaction.depth = 20)
+```
+
+    ## CV: 1 
+    ## Iter   TrainDeviance   ValidDeviance   StepSize   Improve
+    ##      1       36.5857         34.6752     0.0010    0.0039
+    ##      2       36.5791         34.6703     0.0010    0.0046
+    ##      3       36.5719         34.6654     0.0010    0.0039
+    ##    ...
+
+``` r
+best.iter <- TDboost.perf(fit, method="test")
+best.iter <- TDboost.perf(fit, method="cv")
+```
+
+![](files/unnamed-chunk-8-1-a.png)<!-- -->
+
+``` r
+predict_bst=predict.TDboost(fit, freMTPL2[idx_correct,], best.iter)
+```
+
+    ## Warning in predict.TDboost(fit, freMTPL2[idx_correct, ], best.iter):
+    ## predict.TDboost does not add the offset to the predicted values.
+
+``` r
+fit_loc_3 = locfit.raw(x=predict_bst, 
+                         y=freMTPL2[idx_correct,"ClaimAmount"],
+                         kern="rect",deg=0,alpha=.05)
+```
+
+The figure below is the distribution of the premiums according to the
+three models
+
+``` r
+par(mfrow=c(1,4))
+hist(predict_glm, breaks = seq(0,max(predict_glm)+10,by=5),xlim=c(0,300),col=clrpal4[1],border="white",
+     main="",xlab="Premium (GLM)",ylab="",ylim=c(0,5000))
+hist(predict_gam, breaks = seq(0,max(predict_gam)+10,by=5),xlim=c(0,300),col=clrpal4[2],border="white",
+     main="",xlab="Premium (GAM)",ylab="",ylim=c(0,5000))
+hist(predict_bst, breaks = seq(0,max(predict_bst)+10,by=5),xlim=c(0,300),col=clrpal4[3],border="white",
+     main="",xlab="Premium (boosting)",ylab="",ylim=c(0,5000))
+exc = c(mean(predict_glm>300),mean(predict_gam>300),mean(predict_bst>300))
+names(exc)=c("glm","gam","bst")
+```
+
+![](files/unnamed-chunk-9-1-a.png)<!-- -->
+
+``` r
+par(mfrow=c(1,3))
+plot(fit_loc_1,lwd=3,col=clrpal4[1],xlim=c(0,300),xlab="Premium (GLM)",ylab="",ylim=c(0,300))
+abline(a=0,b=1,lwd=.4)
+plot(fit_loc_2,lwd=3,col=clrpal4[2],xlim=c(0,300),xlab="Premium (GAM)",ylab="",ylim=c(0,300))
+abline(a=0,b=1,lwd=.4)
+plot(fit_loc_3,lwd=3,col=clrpal4[3],xlim=c(0,300),xlab="Premium (Boosting)",ylab="",ylim=c(0,300))
+abline(a=0,b=1,lwd=.4)
+```
+
+![](files/unnamed-chunk-10-1-a.png)<!-- -->
+
+# Removing \`large’ claims
+
+``` r
+pict_correc = function(claims_limit = 1000, pw = 1.66){
+  freMTPL2 = freMTPL2_backup
+freMTPL2 = freMTPL2[freMTPL2$ClaimAmount<=claims_limit,]
+set.seed(123)
+TAUX = c(.6,.2)
+idx_train = sample(1:nrow(freMTPL2),size = round(nrow(freMTPL2)*TAUX[1]))
+idx_reste = (1:nrow(freMTPL2))[-idx_train]
+idx_correct = sample(idx_reste,size = round(nrow(freMTPL2)*TAUX[2]))
+idx_final = (1:nrow(freMTPL2))[-c(idx_train,idx_correct)]
+
+reg_glm = glm(ClaimAmount ~ VehAge+VehPower+VehBrand+as.factor(VehGas)+
+                 Area+Density+Region+DrivAge+BonusMalus+
+                 offset(log(Exposure)),
+          data=freMTPL2[idx_train,],
+          family=tweedie(var.power = pw, link.power = 0))
+library(splines)
+reg_gam = glm(ClaimAmount ~ bs(VehAge)+bs(VehPower)+VehBrand+as.factor(VehGas)+
+                 Area+bs(Density)+Region+bs(DrivAge)+bs(BonusMalus)+
+                 offset(log(Exposure)),
+          data=freMTPL2[idx_train,],
+          family=tweedie(var.power = pw, link.power = 0))
+predict_glm=predict(reg_glm,type="response",newdata=freMTPL2[idx_correct,])
+predict_gam=predict(reg_gam,type="response",newdata=freMTPL2[idx_correct,])
+library(locfit)
+fit_loc_1 = locfit.raw(x=predict_glm, 
+                         y=freMTPL2[idx_correct,"ClaimAmount"], 
+                         kern="rect",deg=0,alpha=.05)
+fit_loc_2 = locfit.raw(x=predict_gam, 
+                         y=freMTPL2[idx_correct,"ClaimAmount"], 
+                         kern="rect",deg=0,alpha=.05)
+
+fit = TDboost(ClaimAmount ~ VehAge+VehPower+VehBrand+as.factor(VehGas)+
+                 Area+Density+Region+DrivAge+BonusMalus+
+                 offset(log(Exposure)),
+              data=freMTPL2[idx_train,],
+              cv.folds=5, n.trees=3000, interaction.depth = 20)
+
+best.iter <- TDboost.perf(fit, method="test")
+best.iter <- TDboost.perf(fit, method="cv")
+predict_bst=predict.TDboost(fit, freMTPL2[idx_correct,], best.iter)
+fit_loc_3 = locfit.raw(x=predict_bst, 
+                         y=freMTPL2[idx_correct,"ClaimAmount"],
+                         kern="rect",deg=0,alpha=.05)
+par(mfrow=c(1,3))
+plot(fit_loc_1,lwd=3,col=clrpal4[1],xlim=c(0,300),xlab="Premium (GLM)",ylab="",ylim=c(0,300))
+abline(a=0,b=1,lwd=.4)
+plot(fit_loc_2,lwd=3,col=clrpal4[2],xlim=c(0,300),xlab="Premium (GAM)",ylab="",ylim=c(0,300))
+abline(a=0,b=1,lwd=.4)
+plot(fit_loc_3,lwd=3,col=clrpal4[3],xlim=c(0,300),xlab="Premium (Boosting)",ylab="",ylim=c(0,300))
+abline(a=0,b=1,lwd=.4)
+}
+x = sort(freMTPL2_backup$ClaimAmount)
+n = length(x)
+a = mean(x==0)
+x2 = sort(x[x>0])
+n2 = length(x2)
+
+par(mfrow=c(1,3))
+plot(x,(1:n)/(n+1),type="s",col=colr[1],xlab="Claim size",ylab="Proportion (%)")
+plot(x2,a+(1:n2)/(n+1),type="s",col=colr[2],xlab="Claim size",ylab="Proporti on (%)",ylim=c(a,1))
+plot(x2,a+(1:n2)/(n+1),type="s",col=colr[4],xlab="Claim size",ylab="Proportion (%)",ylim=c(a,1),log="x")
+```
+
+![](files/unnamed-chunk-11-1-a.png)<!-- -->
+
+``` r
+mean(x>10000)
+```
+
+    ## [1] 0.0005389625
+
+``` r
+mean(x[x>0]>10000)
+```
+
+    ## [1] 0.01024109
+
+``` r
+pict_correc(claims_limit = 10000, pw = 1.6)
+```
+
+    ## CV: 1 
+    ## Iter   TrainDeviance   ValidDeviance   StepSize   Improve
+    ##      1       32.2711         32.5332     0.0010    0.0040
+    ##      2       32.2672         32.5299     0.0010    0.0034
+    ##      3       32.2633         32.5265     0.0010    0.0034
+    ##    ...
+
+![](files/unnamed-chunk-12-1-a.png)<!-- -->
+
+    ## Warning in predict.TDboost(fit, freMTPL2[idx_correct, ], best.iter):
+    ## predict.TDboost does not add the offset to the predicted values.
+
+![](files/unnamed-chunk-12-2-a.png)<!-- -->![](files/unnamed-chunk-12-3-a.png)<!-- -->
+
+``` r
+pict_correc(claims_limit = Inf, pw = 1.5)
+```
+
+    ## Warning in bs(BonusMalus, degree = 3L, knots = numeric(0), Boundary.knots =
+    ## c(50L, : some 'x' values beyond boundary knots may cause ill-conditioned bases
+
+    ## CV: 1 
+    ## Iter   TrainDeviance   ValidDeviance   StepSize   Improve
+    ##      1       36.5857         34.6752     0.0010    0.0039
+    ##      2       36.5791         34.6703     0.0010    0.0046
+    ##      3       36.5719         34.6654     0.0010    0.0039
+    ##    ...
+
+![](files/unnamed-chunk-13-1-a.png)<!-- -->
+
+    ## Warning in predict.TDboost(fit, freMTPL2[idx_correct, ], best.iter):
+    ## predict.TDboost does not add the offset to the predicted values.
+
+![](files/unnamed-chunk-13-2-a.png)<!-- -->![](files/unnamed-chunk-13-3-a.png)<!-- -->
+
+``` r
+pict_correc(claims_limit = Inf, pw = 1.4)
+```
+
+    ## Warning in bs(BonusMalus, degree = 3L, knots = numeric(0), Boundary.knots =
+    ## c(50L, : some 'x' values beyond boundary knots may cause ill-conditioned bases
+
+    ## CV: 1 
+    ## Iter   TrainDeviance   ValidDeviance   StepSize   Improve
+    ##      1       36.5857         34.6752     0.0010    0.0039
+    ##      2       36.5791         34.6703     0.0010    0.0046
+    ##      3       36.5719         34.6654     0.0010    0.0039
+    ##    ...
+![](files/unnamed-chunk-14-3-a.png)<!-- -->
+
