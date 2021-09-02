@@ -944,8 +944,8 @@ plot(Q_bst, Q_bst_bc, lwd=3, col=clrpal4[3], type="l",
      xlab="Premium (boosting)",ylab="Premium BC (boosting)",
      xlim=c(0,.2),ylim=c(0,.2))
 abline(a=0,b=1,lwd=.4)
-plot(Q_bst, Q_nn_bc, lwd=3, col=clrpal4[4], type="l",
-     xlab="Premium (boosting)",ylab="Premium BC (neural nets)",
+plot(Q_nn, Q_nn_bc, lwd=3, col=clrpal4[4], type="l",
+     xlab="Premium (neural nets)",ylab="Premium BC (neural nets)",
      xlim=c(0,.2),ylim=c(0,.2))
 abline(a=0,b=1,lwd=.4)
 ```
