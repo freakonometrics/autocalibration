@@ -7,7 +7,7 @@ This github repository is based on the paper
 
 Michel Denuit, Arthur Charpentier & Julien Trufin (2021)
 **Autocalibration and Tweedie-dominance for Insurance Pricing with
-Machine Learning** [https://arxiv.org/abs/2103.03635](ArXiv:2103.03635)
+Machine Learning** [ArXiv:2103.03635](https://arxiv.org/abs/2103.03635)
 
 Here are the codes used to produce the figures in section 6.
 
